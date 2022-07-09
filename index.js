@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import colors from 'colors';
-import { inquirerMenu, leerInput, pausa } from './helpers/inquirer.js';
+import { inquirerMenu, leerInput, pausa, listarLugares } from './helpers/inquirer.js';
 import { Busquedas } from './models/busquedas.js';
 
 
@@ -11,14 +11,17 @@ const main = async() => {
     
     do {
         opt = await inquirerMenu();
-        console.log({opt})
         
         switch (opt) {
             case 1:
                 // Mostrar mensaje
-                const lugar = await leerInput('Ciudad: ');
-                await busquedas.ciudad(lugar);
+                const termino = await leerInput('Ciudad: ');
+                
                 //Buscar los lugares
+                const lugares = await busquedas.ciudad(termino);
+                const id = await listarLugares(lugares);
+                const lugarSelec = lugares.find( l => l.id === id)
+
 
                 //Seleccionar el lugar
 
@@ -26,9 +29,9 @@ const main = async() => {
 
                 //Mostrar resultados
                 console.log('\n Información de la ciudad\n'.green)
-                console.log('Ciudad: ')
-                console.log('Lat: ')
-                console.log('Long: ')
+                console.log('Ciudad: ', lugarSelec.nombre)
+                console.log('Lat: ', lugarSelec.lat)
+                console.log('Long: ', lugarSelec.lng)
                 console.log('Temperatura: ')
                 console.log('Mínima: ')
                 console.log('Máxima: ')
